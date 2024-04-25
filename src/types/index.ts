@@ -10,7 +10,7 @@ export interface IProduct {
     categoryName: TProductCategory;
     productName: string;
     description: string;
-    price: number;
+    price: number | null;
     imageUrl?: string;
     isSelected?: boolean;
 }
