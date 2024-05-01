@@ -239,6 +239,7 @@ events.on( /^contacts\..*:change/,(data: { field: keyof IPaymentForm; value: str
     }
 );
 
+
 // оформление заказа и модальное окно об успехе
 events.on('contacts:submit', async () => {
     try {
