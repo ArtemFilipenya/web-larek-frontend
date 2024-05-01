@@ -1,59 +1,97 @@
-// Уточнение категорий продуктов
-export type TProductCategory = 'soft-skill' | 'other' | 'additional' | 'button' | 'hard-skill';
+import { Product } from '../components/appState';
 
-// Расширение типов оплаты
+export type TProductCategory = 'soft-skill' | 'other' | 'additional' | 'button' | 'hard-skill';
 export type TPaymentMethod = 'online' | 'cash-on-delivery' | 'credit-card';
 
-// Интерфейс для описания продукта
+//Продукт
 export interface IProduct {
-    productId: string;
-    categoryName: TProductCategory;
-    productName: string;
-    description: string;
-    price: number | null;
-    imageUrl?: string;
-    isSelected?: boolean;
+    id: string;
+    title: string;
+    image: string;
+    price: number;
+    category: string;
+    description?: string;
 }
 
 // Интерфейс для элементов корзины
-export interface IBasketItem {
-    product: IProduct;
-    quantity: number;
-    subtotal: number;
+export interface INumberProduct extends IProduct {
+    index: number;
 }
 
-// Интерфейс для данных корзины
 export interface IBasket {
-    items: IBasketItem[];
+    items: HTMLElement[];
     totalAmount: number;
 }
 
-// Интерфейс для формы заказа
-export interface IOrderDetails {
-    paymentMethod: TPaymentMethod;
-    shippingAddress: string;
-    contactEmail: string;
-    contactPhone: string;
-    estimatedDeliveryDate?: Date;
+export interface IProductBasketActions {
+    onClick: (event: MouseEvent) => void;
 }
 
-// Интерфейс для ответа об успешном оформлении заказа
-export interface IOrderConfirmation {
-    orderId: string;
-    orderTotal: number;
-    confirmationMessage: string;
+export interface IForm {
+    valid: boolean;
+    errors: string[];
 }
 
-// Интерфейс для состояния приложения
+export interface IContactsFormData {
+    email: string;
+    phone: string;
+    [key: string]: any;
+}
+
+// Заказ товара
+export interface IPaymentDetails {
+    payment: TPaymentMethod | string;
+    address: string;
+    email: string;
+    phone: string;
+    total: number;
+    items: string[];
+}
+
+export interface IPaymentForm {
+    payment: string;
+    address: string;
+    email: string;
+    phone: string;
+}
+
+export interface IPaymentResult {
+    id: string;
+    total: number;
+}
+
+export type FormErrors = Partial<Record<keyof IPaymentDetails , string>>;
+
+// Ответ API
+export interface ApiResponse {
+    items: IProduct[];
+}
+
+// Информация о состоянии приложения
 export interface IApplicationState {
-    productCatalog: IProduct[];
-    shoppingBasket: IBasket;
-    currentOrder: IOrderDetails | null;
-    previewProduct: IProduct | null;
+    basket: Product[]; // товары в корзине
+    catalog: Product[]; // список всех товаров
+    order: IPaymentDetails | null; // информация о заказе
+    preview: IProduct | null;
 }
 
-// Интерфейс для действий с карточкой товара
+export interface IModalData {
+    content: HTMLElement;
+    product?: IProduct;
+}
+
 export interface IProductCardActions {
-    onAddToCart: (productId: string, quantity: number) => void;
-    onRemoveFromCart: (productId: string, quantity: number) => void;
+    onClick: (event: MouseEvent, product: IProduct) => void;
+    data?: IProduct;
+}
+
+export interface IAppApi {
+    getProductList(): Promise<IProduct[]>;
+    postPaymentProduct(order: IPaymentDetails): Promise<IPaymentResult>;
+}
+
+export interface IPage {
+    counter: number;
+    catalog: HTMLElement[];
+    locked: boolean;
 }
